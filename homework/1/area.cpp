@@ -23,27 +23,25 @@
 //
 //*********************************************************************// 
 
-// include files
-#include <iostream>	     // this has the cout, cin definitions
-using namespace std;     // if omitted, then need std::cout, std::cin 
+#include <iostream>
+using namespace std;
 
 //*********************************************************************//
 
-const double pi = 3.1415926535897932385;   // define pi as a constant 
+const double pi = 3.1415926535897932385;
 
-int
-main ()
-{
-  double radius;    // every variable is declared as int or double or ...
+int main () {
+    double radius;
 
-  cout << "Enter the radius of a circle: ";	// ask for radius
-  cin >> radius;
+    cout << "Enter the radius of a circle: ";
+    cin >> radius;
 
-  double area = pi * radius * radius;	// standard area formula
+    // Standard area formula
+    double area = pi * radius * radius;
 
-  cout << "radius = " << radius << ",  area = " << area << endl;
+    cout << "radius = " << radius << ",  area = " << area << endl;
 
-  return 0;			// "0" for successful completion
+    return 0;
 }
 
 //*********************************************************************//
