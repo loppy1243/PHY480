@@ -73,10 +73,6 @@ int main() {
         cerr << "Invalid input: expected number!" << endl;
         return ERR_INVALID_INPUT;
     }
-    else if (radius < 0.0) {
-        cerr << "Radius cannot be negative!" << endl;
-        return ERR_INVALID_INPUT;
-    }
 
     Circle circle(radius);
 
