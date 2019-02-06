@@ -1,4 +1,5 @@
 CXX := g++
+CXXFLAGS :=
 
 TARGETS := area sum_order
 SRC_DIR := ./
@@ -13,7 +14,7 @@ endef
 $(foreach target,$(TARGETS),$(eval $(call TARGET_RULE,$(target))))
 
 $(BUILD_DIR)/bin/%.x: $(SRC_DIR)/%.cpp $(BUILD_DIR)
-	$(CXX) -o $@ $<
+	$(CXX) $(CXXFLAGS) -o $@ $<
 
 $(BUILD_DIR):
 	@mkdir -p $(BUILD_DIR)/bin
