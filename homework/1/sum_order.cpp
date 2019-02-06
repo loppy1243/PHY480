@@ -32,16 +32,18 @@ void usage(std::ostream &stream, char const *prog_name) {
 int main(int argc, char **argv) {
     if (argc != 2) {
         std::cerr << "Invalid number of arguments: expected 1, got " << argc << std::endl;
-        usage(cerr, argv[0]);
+        usage(std::cerr, argv[0]);
         return ERR_INVALID_INPUT;
     }
 
     int n_max;
 
-    try n_max = std::stoi(argv[1]);
+    try {
+        n_max = std::stoi(argv[1]);
+    }
     catch (std::invalid_argument ex) {
         std::cerr << "Invalid argument: expected integer" << std::endl;
-        usage(cerr, argv[0]);
+        usage(std::cerr, argv[0]);
         return ERR_INVALID_INPUT;
     }
 
