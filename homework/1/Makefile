@@ -1,23 +1,24 @@
-CC := gcc
+CXX := g++
 
 TARGETS := area
 SRC_DIR := ./
 BUILD_DIR := build
 
 all : $(TARGETS)
-$(TARGETS) : $(TARGETS:$(BUILD_DIR)/bin/%.x)
 
-$(BUILD_DIR)/bin/%.x : $(BUILD_DIR)/%.o
-	$(CC) -o $% $<
+.PHONY: $(TARGETS)
+$(foreach target,$(TARGETS),$(target) : $(BUILD_DIR)/bin/$(target).x)
 
-$(BUILD_DIR)/%.o : $(BUILD_DIR) %.cpp
-	$(CC) -o $% -c $<
+$(BUILD_DIR)/bin/%.x : $(SRC_DIR)/%.cpp $(BUILD_DIR)
+	$(CXX) -o $@ $<
 
 $(BUILD_DIR) :
 	@mkdir -p $(BUILD_DIR)/bin
 
+.PHONY: clean
 clean :
 	rm -rf $(shell find $(BUILD_DIR) -not path 'build' -not -path '$(BUILD_DIR)/bin*')
 
+.PHONY: clean-all
 clean-all :
 	rm -rf build
