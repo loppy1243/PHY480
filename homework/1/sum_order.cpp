@@ -8,19 +8,17 @@ int const ERR_INVALID_INPUT = 1;
 //// Define sum_up(), sum_down() templated so that we can potentially test them with float,
 //// double, and perhaps something else.
 
-// (reasonably) assumes that T is floating-point
 template<class T>
 T sum_up(int n) {
-    T tot = 0;
-    for (int i=1; i <= n; ++i) tot += 1.0/n;
+    T tot = 1.0;
+    for (int i=2; i <= n; ++i) tot += 1.0/(T) i;
     return tot;
 }
 
-// (reasonably) assumes that T is floating-point
 template<class T>
 T sum_down(int n) {
-    T tot = 0;
-    for (int i=n; i > 0; --i) tot += 1.0/n;
+    T tot = 1.0/(T) n;
+    for (int i=n-1; i >= 1; --i) tot += 1.0/(T) i;
     return tot;
 }
 
@@ -47,24 +45,25 @@ int main(int argc, char **argv) {
         return ERR_INVALID_INPUT;
     }
 
-    int ndigits = 1 + (int) floor(log10(n_max));
+    int const ndigits = 1 + (int) floor(log10(n_max));
     // If ndigits < the width of the terms column header (7), then use that.
-    int terms_col_width = ndigits < 5 ? 5 : ndigits;
+    int const terms_col_width = ndigits < 5 ? 5 : ndigits;
+    int const prec = 8;
 
     char const *const space = "   ";
     // Print header "terms sum_up sum_down" with appropriate spacing.
     std::cout << std::left
               << std::setw(terms_col_width) << "terms"
-    // 8 for precision + 6 for remaining parts of scientific notation e.g. "1.e+12"
-              << space << std::setw(8+6) << "sum_up"
-              << space << std::setw(8+6) << "sum_down"
-              << space << std::setw(8+6) << "rel_diff" << std::endl
+    // 6 for remaining parts of scientific notation e.g. "1.e+12"
+              << space << std::setw(prec+6) << "sum_up"
+              << space << std::setw(prec+6) << "sum_down"
+              << space << std::setw(prec+6) << "rel_diff" << std::endl
     // Set format flags for the following loop.
-              << std::right << std::scientific << std::setprecision(8);
+              << std::right << std::scientific << std::setprecision(prec);
     for (int n=1; n <= n_max; ++n) {
         float up = sum_up<float>(n);
         float down = sum_down<float>(n);
-        float rel_diff = abs(up-down)/((abs(up)+abs(down))/2.0);
+        float rel_diff = fabs(up-down)/((fabs(up)+fabs(down))/2.0);
 
         std::cout << std::setw(terms_col_width) << n
                   << space << up
