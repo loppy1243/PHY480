@@ -70,7 +70,7 @@ int main() {
     }
     // If the input could not be parsed as a double
     else if (cin.fail()) {
-        cerr << "Invalid input: expected number!" << endl;
+        cerr << "Invalid input: expected number" << endl;
         return ERR_INVALID_INPUT;
     }
 
