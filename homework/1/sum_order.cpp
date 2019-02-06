@@ -47,21 +47,26 @@ int main(int argc, char **argv) {
         return ERR_INVALID_INPUT;
     }
 
-    int ndigits = (int) ceil(log10(n_max));
+    int ndigits = 1 + (int) floor(log10(n_max));
+    // If ndigits < the width of the terms column header (7), then use that.
+    int terms_col_width = ndigits < 5 ? 5 : ndigits;
 
     char const *const space = "   ";
-    // Print header "# terms sum_up sum_down" with appropriate spacing.
+    // Print header "terms sum_up sum_down" with appropriate spacing.
     std::cout << std::left
-              << std::setw(ndigits) << "# terms"
-              << space << std::setw(8+5) << "sum_up"
-              << space << std::setw(8+5) << "sum_down" << std::endl
+              << std::setw(terms_col_width) << "terms"
+    // 8 for precision + 6 for remaining parts of scientific notation e.g. "1.e+12"
+              << space << std::setw(8+6) << "sum_up"
+              << space << std::setw(8+6) << "sum_down" << std::endl
     // Set format flags for the following loop.
               << std::right << std::scientific << std::setprecision(8);
     for (int n=1; n <= n_max; ++n) {
         float up = sum_up<float>(n);
         float down = sum_down<float>(n);
 
-        std::cout << std::setw(ndigits) << n << space << up << space << down << std::endl;
+        std::cout << std::setw(terms_col_width) << n
+                  << space << up
+                  << space << down << std::endl;
     }
 
     return 0;
