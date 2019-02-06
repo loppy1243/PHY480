@@ -57,16 +57,19 @@ int main(int argc, char **argv) {
               << std::setw(terms_col_width) << "terms"
     // 8 for precision + 6 for remaining parts of scientific notation e.g. "1.e+12"
               << space << std::setw(8+6) << "sum_up"
-              << space << std::setw(8+6) << "sum_down" << std::endl
+              << space << std::setw(8+6) << "sum_down"
+              << space << std::setw(8+6) << "rel_diff" << std::endl
     // Set format flags for the following loop.
               << std::right << std::scientific << std::setprecision(8);
     for (int n=1; n <= n_max; ++n) {
         float up = sum_up<float>(n);
         float down = sum_down<float>(n);
+        float rel_diff = abs(up-down)/((abs(up)+abs(down))/2.0);
 
         std::cout << std::setw(terms_col_width) << n
                   << space << up
-                  << space << down << std::endl;
+                  << space << down
+                  << space << rel_diff << std::endl;
     }
 
     return 0;
