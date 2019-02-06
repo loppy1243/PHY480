@@ -1,6 +1,6 @@
 CXX := g++
 
-TARGETS := area
+TARGETS := area sum_order
 SRC_DIR := ./
 BUILD_DIR := build
 
