@@ -44,19 +44,19 @@ inline double square(double x) { return x*x; }
 
 // Represents a circle by storing the radius.
 class Circle {
-    double radius;
+    double _radius;
 
 public:
     Circle(double radius) {
         if (radius < 0.0)
             throw domain_error("Radius must be non-negative");
 
-        this->radius = radius;
+        this->_radius = radius;
     }
 
-    inline double radius() { return this->radius; }
-    inline double area() { return PI*square(this->radius); }
-}
+    inline double radius() { return this->_radius; }
+    inline double area() { return PI*square(this->_radius); }
+};
 
 int main() {
     double radius;
@@ -85,6 +85,7 @@ int main() {
     file << setprecision(9)
          << "radius = " << radius << ",  area = " << circle.area() << endl;
     file.close();
+    cout << "Output written to " << OUTPUT_FILE << endl;
 
     return 0;
 }
