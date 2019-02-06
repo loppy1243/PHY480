@@ -14,19 +14,17 @@
 //                   Define standalone circle_area() function
 //                   Output to a file instead of stdout
 //                   Add error handling to input
+//                   Wrap into Circle class
 //
 //  Notes:  
 //   * compile with:  "g++ -o area.x area.cpp"
-//
-//  To do:
-//   6. add checks of the input (e.g., for non-positive radii)
-//   7. rewrite using a Circle class
 //
 //*********************************************************************// 
 
 #include <iostream>
 #include <iomanip>
 #include <fstream>
+#include <exception>
 #include <cmath>
 using namespace std;
 
@@ -43,7 +41,22 @@ double const PI = 4.0*atan(1.0);
 
 // Explicit inlining is likely redundant, but w/e.
 inline double square(double x) { return x*x; }
-inline double circle_area(double x) { return PI*square(x); }
+
+// Represents a circle by storing the radius.
+class Circle {
+    double radius;
+
+public:
+    Circle(double radius) {
+        if (radius < 0.0)
+            throw domain_error("Radius must be non-negative");
+
+        this->radius = radius;
+    }
+
+    inline double radius() { return this->radius; }
+    inline double area() { return PI*square(this->radius); }
+}
 
 int main() {
     double radius;
@@ -65,13 +78,12 @@ int main() {
         return ERR_INVALID_INPUT;
     }
 
-    // Standard area formula
-    double area = circle_area(radius);
+    Circle circle(radius);
 
     ofstream file(OUTPUT_FILE);
-    // Default precision is 6 is too small, so we increase to 9.
+    // Default precision of 6 is too small, so we increase to 9.
     file << setprecision(9)
-         << "radius = " << radius << ",  area = " << area << endl;
+         << "radius = " << radius << ",  area = " << circle.area() << endl;
     file.close();
 
     return 0;
