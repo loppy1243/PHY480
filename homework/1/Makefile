@@ -1,7 +1,7 @@
 CXX := g++
 
-TARGETS := area sum_order
-PLOT_TARGETS := sum_order
+TARGETS := area sum_order bessel
+PLOT_TARGETS := sum_order bessel
 SRC_DIR := ./
 BUILD_DIR := build
 PLOT_DIR := plots
