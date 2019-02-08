@@ -6,6 +6,8 @@ SRC_DIR := ./
 BUILD_DIR := build
 PLOT_DIR := plots
 
+bessel-cxxflags = -lgsl
+
 all: $(TARGETS)
 
 .PHONY: $(TARGETS)
@@ -22,7 +24,7 @@ endef
 $(foreach target,$(PLOT_TARGETS),$(eval $(call PLOT_TARGET_RULE,$(target))))
 
 $(BUILD_DIR)/bin/%.x: $(SRC_DIR)/%.cpp | $(BUILD_DIR)
-	$(CXX) $(CXXFLAGS) -o $@ $<
+	$(CXX) $(CXXFLAGS) $($(*F)-cxxflags) -o $@ $<
 
 $(PLOT_DIR)/%.pdf: $(SRC_DIR)/%.plt | mk_plot_dir
 	gnuplot $(PLOTFLAGS) $($(*F)-plotflags) $<

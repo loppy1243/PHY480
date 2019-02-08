@@ -9,9 +9,10 @@
 //      02-Jan-2011  new version, for 780.20 Computational Physics
 //      07-Feb-2019  Add relative difference between up and down to output
 //                   Add column headers to output
+//                   Add comparison to gsl_sf_bessel_jl()
 //
 //  Notes:  
-//   * compile with:  "g++ -o bessel bessel.cpp"
+//   * compile with:  "g++ -o bessel -lgsl bessel.cpp"
 //   * adapted from: "Projects in Computational Physics" by Landau and Paez  
 //             copyrighted by John Wiley and Sons, New York               
 //             code copyrighted by RH Landau  
@@ -24,6 +25,7 @@
 #include <iomanip>		// note that .h is omitted
 #include <fstream>		// note that .h is omitted
 #include <cmath>
+#include <gsl/gsl_sf_bessel.h>
 using namespace std;		// we need this when .h is omitted
 
 // function prototypes 
@@ -45,22 +47,29 @@ int main () {
   char const *const space = " ";
   my_out << "# Spherical Bessel functions via up and down recursion" << endl
   // 6+7 -- 6 decimal places plus 7 other characters i.e. "+1.e+00"
-         << setw(8) << "x" << space << setw(6+7) << "down" << space
-            << setw(6+7) << "up" << space << setw(6+7) << "rel_diff" << endl
+         << left << setw(8) << "x" << space << setw(6+7) << "down" << space
+            << setw(6+7) << "up" << space << setw(6+7) << "gsl" << space
+            << setw(6+7) << "rel_up_down" << space << setw(6+7) << "rel_down_gsl" << space
+            << setw(6+7) << "rel_up_gsl" << endl
          << right;
 
   // step through different x values
   for (double x = xmin; x <= xmax; x += step) {
     double ans_down = down_recursion(x, order, start);
     double ans_up = up_recursion(x, order);
-    double rel_diff = fabs(ans_down-ans_up)/(fabs(ans_down)+fabs(ans_up));
+    double ans_gsl = gsl_sf_bessel_jl(order, x);
+    double rel_diff_down_up = fabs(ans_down-ans_up)/(fabs(ans_down)+fabs(ans_up));
+    double rel_diff_up_gsl = fabs(ans_up-ans_gsl)/(fabs(ans_up)+fabs(ans_gsl));
+    double rel_diff_down_gsl = fabs(ans_down-ans_gsl)/(fabs(ans_down)+fabs(ans_gsl));
 
     my_out << fixed << setprecision(6)
               << setw(8) << x << space
               << scientific << setprecision(6)
     // 6+7 -- 6 decimal places plus 7 other characters i.e. "+1.e+00"
               << setw(6+7) << ans_down << space << setw(6+7) << ans_up << space
-              << setw(6+7) << rel_diff << endl;
+              << setw(6+7) << ans_gsl << space << setw(6+7) << rel_diff_down_up << space
+              << setw(6+7) << rel_diff_down_gsl << space << setw(6+7) << rel_diff_up_gsl
+              << endl;
   }
   cout << "data stored in bessel.dat." << endl;
 
