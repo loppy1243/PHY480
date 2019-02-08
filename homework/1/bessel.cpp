@@ -45,8 +45,9 @@ int main () {
   char const *const space = " ";
   my_out << "# Spherical Bessel functions via up and down recursion" << endl
   // 6+7 -- 6 decimal places plus 7 other characters i.e. "+1.e+00"
-         << left << setw(8) << "# x" << space << setw(6+7) << "down" << space
-            << setw(6+7) << "up" << space << setw(6+7) << "rel_diff" << endl;
+         << setw(8) << "x" << space << setw(6+7) << "down" << space
+            << setw(6+7) << "up" << space << setw(6+7) << "rel_diff" << endl
+         << right;
 
   // step through different x values
   for (double x = xmin; x <= xmax; x += step) {
