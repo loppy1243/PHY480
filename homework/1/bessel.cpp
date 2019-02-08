@@ -39,8 +39,6 @@ const int start = 50;		// used for downward algorithm
 
 //********************************************************************
 int main () {
-  double ans_down, ans_up;
-
   // open an output file stream
   ofstream my_out ("bessel.dat");
 
@@ -52,9 +50,9 @@ int main () {
 
   // step through different x values
   for (double x = xmin; x <= xmax; x += step) {
-    ans_down = down_recursion(x, order, start);
-    ans_up = up_recursion(x, order);
-    rel_diff = fabs(ans_down-ans_up)/(fabs(ans_down)+fabs(ans_up));
+    double ans_down = down_recursion(x, order, start);
+    double ans_up = up_recursion(x, order);
+    double rel_diff = fabs(ans_down-ans_up)/(fabs(ans_down)+fabs(ans_up));
 
     my_out << fixed << setprecision(6)
               << setw(8) << x << space
