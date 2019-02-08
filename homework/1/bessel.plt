@@ -5,7 +5,7 @@ if (!exists('plotfile')) {
     plotfile = 'bessel.pdf'
 }
 
-set terminal pdfcairo size 16,9 noenhanced font 'Times,20'
+set terminal pdfcairo size 8,9 noenhanced font 'Times,20'
 set output plotfile
 
 array titles[3];
@@ -21,5 +21,5 @@ do for [i=5:7] {
     if (i == 5) {
         set title 'Relative Differences vs. x-Values (log-log)'
     }
-    plot datafile using 1:i linetype i-4 title titles[i-4]
+    plot datafile using 1:i linetype i-4 title titles[i-4] with dots
 }
