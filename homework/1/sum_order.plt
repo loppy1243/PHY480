@@ -23,7 +23,7 @@ set key top left
 set logscale
 set multiplot
 
-set lmargin at screen 0.1
+set lmargin at screen 0.15
 set rmargin at screen 0.9
 set tmargin at screen 0.9
 set bmargin at screen 0.55
@@ -34,18 +34,14 @@ plot 1/0 linestyle 1 with points title titles[3], \
      10**f(a1, b1, log10(x)) title sprintf('%f*x + %f', a1, b1), \
      10**f(a2, b2, log10(x)) title sprintf('%f*x + %f', a2, b2)
 
-set lmargin at screen 0.1
+set lmargin at screen 0.15
 set rmargin at screen 0.9
 set tmargin at screen 0.45
 set bmargin at screen 0.1
-set title 'Upward and Downward Summation'
+set title 'Upward and Downward Summation (around significant divergence n > 5e5)'
 set xlabel 'Terms'
-set ylabel 'Upward Sum'
-set y2label 'Downward Sum'
-set ytics nomirror
-set y2tics auto
+set ylabel 'Sum'
 unset logscale y
-unset logscale y2
-plot for [i=2:3] 1/0 linestyle i with points title titles[i-1], \
-     datafile using 1:2 linestyle 2 notitle axes x1y1 with dots, \
-     ''       using 1:3 linestyle 3 notitle axes x1y2 with dots
+plot [5e5:] for [i=2:3] 1/0 linestyle i with points title titles[i-1], \
+     datafile using 1:2 linestyle 2 notitle with dots, \
+     ''       using 1:3 linestyle 3 notitle with dots
