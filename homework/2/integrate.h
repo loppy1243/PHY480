@@ -1,3 +1,10 @@
+#ifndef _INTEGRATE_H
+#define _INTEGRATE_H
+
+namespace integrate {
+
+using integrand_t = std::function<double(double)>;
+
 /* Integrate func using the respective method over the inclusive range [begin,
  * end] on meshsize number of points.
  *
@@ -8,3 +15,12 @@
  * double */
 template<class F> double simpson(double begin, double end, int meshsize, F func);
 template<class F> double   milne(double begin, double end, int meshsize, F func);
+
+} // end namespace integrate
+
+// This must be set to allow arbitrary template instantiation.
+#ifdef HEADER_INLINE_TEMPLATES
+    #include "integrate.cpp"
+#endif
+
+#endif // _INTEGRATE_H defined
