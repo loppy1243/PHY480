@@ -1,0 +1,34 @@
+# HW grading scale: check(+) --> excellent (good code and analysis) 
+#                   check    --> satisfactory (minor shortcomings in code and/or analysis)
+#                   check(-) --> significant problems w/code or analysis
+
+1) Problem 1 (area.cpp embellishments): 
+
+Your code looks great. 
+
+2)Problem 2 (sum up/down): 
+
+Again, nice job writing it in a very general/extendable way. You analysis is correct-- this is basically
+the same problem we did in class (1+eps+eps... versus eps + eps + ...+ 1).
+
+
+3) Problem 3 (bessel functions): 
+
+Your analysis is right on the money. You were one of a small handful who realized 
+that by making separate error plots using up/gsl and down/gsl, one can make sense of the up/down 
+relative error plots (i.e., figure out which is the culprit when the relative difference is ~ 1).
+
+(If interested, you can understand numerical value of the slope between x=1 and 10
+using the short-distance x << l expressions of the spherical bessel and neumann functions. 
+I wonder if one can play similar games for the VERY steep 
+region above x = 30 using the asymptotic x >> l expressions for jl(x) and nl(x).)
+
+
+
+##### HW grade = check(+). 
+
+Nice job. Your codes are sophisticated and well written, and you hit all the main points 
+asked for in the analysis. [Sorry for the delay. I though I had graded everyone over the weekend, and 
+I only noticed yours just now.]
+
+
