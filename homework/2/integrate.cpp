@@ -7,9 +7,13 @@
 
 namespace integrate {
 
+/* The use of OpenMP in simpson and milne does not seem to produce any speedup
+ * on my 4-core machine; however, I only ever see 100% CPU usage, so there is
+ * possibly something going on.  */
+
+
 /* If meshsize is even, 1 is added to make it odd. */
-template<class F>
-double simpson(double begin, double end, int meshsize, F func) {
+template<class F> double simpson(double begin, double end, int meshsize, F func) {
     if (meshsize < 0)
         throw std::domain_error("meshsize must be positive");
     else if (meshsize == 0)
@@ -20,7 +24,7 @@ double simpson(double begin, double end, int meshsize, F func) {
 
     double integral = func(begin);
     #ifdef OMP
-    #pragma omp parallel
+    #pragma omp parallel for reduction(+:integral)
     #endif
     for (int i = 1; i < meshsize-1; ++i) {
         const double x = begin + i*step;
@@ -33,8 +37,7 @@ double simpson(double begin, double end, int meshsize, F func) {
 }
 
 /* meshsize is rounded up to the next multiple of 4. */
-template<class F>
-double milne(double begin, double end, int meshsize, F func) {
+template<class F> double milne(double begin, double end, int meshsize, F func) {
     if (meshsize < 0)
         throw std::domain_error("meshsize must be positive");
     else if (meshsize == 0)
@@ -44,18 +47,13 @@ double milne(double begin, double end, int meshsize, F func) {
 
     const double step = (end - begin)/(meshsize-1);
 
-    // OpenMP is not working with this for some reason (in my machine with 4 cores); the
-    // plotting in the OpenMP case makes it look like there is a race condition. I thought
-    // perhaps accuraccy was an issue; some Googling suggested Kahan summation, but that does
-    // not appear to help in the slightest.
-
     double integral = func(begin);
     double mid_integral = 0.0;
     #ifdef OMP
-    #pragma omp parallel for reduction(+:integral)
+    #pragma omp parallel for reduction(+:mid_integral)
     #endif
     for (int i = 1; i < meshsize-1; ++i) {
-        double x = begin + i*step;
+        const double x = begin + i*step;
         int weight;
         switch (i % 4) {
             case 0: weight = 16; break;
