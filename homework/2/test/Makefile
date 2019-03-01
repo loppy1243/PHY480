@@ -4,6 +4,7 @@ ROOT := ../
 ifeq ($(MAKELEVEL), 0)
 include $(ROOT)/config.mk
 endif
+
 EXES := integrate_test.x
 EXES := $(EXES:%=$(EXE_PREFIX)/%)
 
@@ -19,7 +20,8 @@ clean-all:
 
 $(EXE_PREFIX)/integrate_test.x: integrate_test.cpp $(BUILD_PREFIX)/integrate.o
 	@mkdir -p $(EXE_PREFIX)
-	$(CXX) -o $@ $(CXXFLAGS) $^
+	$(CXX) -o $@ $(LIBS:%=-l%) $(CXXFLAGS) $^
 
 $(BUILD_PREFIX)/integrate.o: $(ROOT)/integrate.cpp
+	$(eval LIBS := $(LIBS) $(integrate_LIBS))
 	make -C $(ROOT) build

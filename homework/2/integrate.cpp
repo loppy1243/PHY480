@@ -1,11 +1,13 @@
 #include <stdexcept>
 #include <functional>
+#include <iostream>
+#include <cstdlib>
+#include <gsl/gsl_integration.h>
 #include "integrate.h"
 
 namespace integrate {
 
-/* If meshsize is even, 1 is added. This ensures an even number of
- * subintervals. */
+/* If meshsize is even, 1 is added to make it odd. */
 template<class F>
 double simpson(double begin, double end, int meshsize, F func) {
     if (meshsize < 0)
@@ -30,8 +32,7 @@ double simpson(double begin, double end, int meshsize, F func) {
     return step/3.0*integral;
 }
 
-/* meshsize is rounded up to the next multiple of 3. This ensures a number of
- * subintervals divisible by 4. */
+/* meshsize is rounded up to the next multiple of 3. */
 template<class F>
 double milne(double begin, double end, int meshsize, F func) {
     if (meshsize < 0)
@@ -75,10 +76,39 @@ double milne(double begin, double end, int meshsize, F func) {
     return 4.0/3.0*step*integral;
 }
 
+/* Interface with GSL fixed Legendre method. */
+double legendre(double begin, double end, int meshsize, integrand_fptr_t func) {
+    if (meshsize < 0)
+        throw std::domain_error("meshsize must be positive");
+    else if (meshsize == 0)
+        return 0.0;
+
+    // This is hacky... but it should work.
+    gsl_function gfunc;
+    gfunc.function = (double (*)(double, void *)) func;
+    gfunc.params = nullptr;
+
+    auto workspace =
+        gsl_integration_fixed_alloc(gsl_integration_fixed_legendre, meshsize, begin, end,
+                                    0.0, 0.0);
+
+    double ret;
+    int err = gsl_integration_fixed(&gfunc, &ret, workspace);
+    gsl_integration_fixed_free(workspace);
+    if (err) {
+        std::cerr << __FILE__ << ':' << __LINE__ << ": WARNING: GSL error code " << err
+                  << ". Returning 0.0." << std::endl;
+    }
+
+    return ret;
+}
+
 // If we don't allow arbitrary template instantiation, then at least compile these.
 #ifndef HEADER_INLINE_TEMPLATES
     template double simpson<integrand_t>(double, double, int, integrand_t);
+    template double simpson<integrand_fptr_t>(double, double, int, integrand_fptr_t);
     template double milne<integrand_t>(double, double, int, integrand_t);
+    template double milne<integrand_fptr_t>(double, double, int, integrand_fptr_t);
 #endif
 
 } // end namespace integrate

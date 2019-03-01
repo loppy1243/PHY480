@@ -10,12 +10,16 @@
 #endif
 #include "../integrate.h"
 
-using method_t = std::function<double(double, double, int, integrate::integrand_t)>;
+// We using integrate::integrand_fptr_t because integrate::legendre uses gsl.
+using method_t = std::function<double(double, double, int, integrate::integrand_fptr_t)>;
 
-constexpr size_t nmethods = 2;
-const std::array<method_t, nmethods> methods =
-    {&integrate::simpson<integrate::integrand_t>, &integrate::milne<integrate::integrand_t>};
-const std::array<const char *, nmethods> method_names = {"simpson", "milne"};
+constexpr size_t nmethods = 3;
+const std::array<method_t, nmethods> methods = {
+    &integrate::simpson<integrate::integrand_fptr_t>,
+    &integrate::milne<integrate::integrand_fptr_t>,
+    &integrate::legendre
+};
+const std::array<const char *, nmethods> method_names = {"simpson", "milne", "gsl_legendre"};
 
 template<class F1, class F2>
 void make_integrate_data(std::ostream &stream, double begin, double end, int n_meshsizes,
