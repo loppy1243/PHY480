@@ -28,8 +28,8 @@ tmpdat = system('mktemp')
 f(a, b, x) = a*x + b
 g1(x) = 10**(f(a1, b1, log10(x)))
 g2(x) = 10**(f(a2, b2, log10(x)))
-fit [20:] f(a1, b1, log10(x)) datafile using 1:(log10(reldiff($2, $3))) via a1,b1
-fit       f(a2, b2, log10(x)) datafile using 1:(log10(reldiff($2, $4))) via a2,b2
+fit f(a1, b1, log10(x)) datafile using 1:(log10(reldiff($2, $3))) via a1,b1
+fit f(a2, b2, log10(x)) datafile using 1:(log10(reldiff($2, $4))) via a2,b2
 
 set multiplot
 set logscale

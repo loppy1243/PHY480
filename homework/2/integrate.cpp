@@ -32,48 +32,43 @@ double simpson(double begin, double end, int meshsize, F func) {
     return step/3.0*integral;
 }
 
-/* meshsize is rounded up to the next multiple of 3. */
+/* meshsize is rounded up to the next multiple of 4. */
 template<class F>
 double milne(double begin, double end, int meshsize, F func) {
     if (meshsize < 0)
         throw std::domain_error("meshsize must be positive");
     else if (meshsize == 0)
         return 0.0;
-    if (meshsize % 3 != 0)
-        meshsize += 3 - meshsize % 3;
+    if (meshsize % 4 != 0)
+        meshsize += 4 - meshsize % 4;
 
-    // |  .  .  .  |  .  .  .  |  .  .  .  |  .  .  .  |
-    //  \/
-    // step
-    //
-    // Dots correspond to the mesh, and bars correspond to the intervals forming the
-    // composite rule.
-    const int n_intervals = meshsize/3;
-    const double step = (end - begin)/(meshsize + n_intervals);
+    const double step = (end - begin)/(meshsize-1);
 
     // OpenMP is not working with this for some reason (in my machine with 4 cores); the
     // plotting in the OpenMP case makes it look like there is a race condition. I thought
     // perhaps accuraccy was an issue; some Googling suggested Kahan summation, but that does
     // not appear to help in the slightest.
 
-    double integral = 0.0; 
+    double integral = func(begin);
+    double mid_integral = 0.0;
     #ifdef OMP
-    #pragma omp parallel
+    #pragma omp parallel for reduction(+:integral)
     #endif
-    {
-        double c = 0.0;
-        #pragma omp for reduction(+:integral)
-        for (int n = 0; n <= n_intervals; ++n) {
-            const double x = begin + 4.0*n*step;
-            const double y = 2.0*func(x + step) + 2.0*func(x + 3.0*step) - func(x + 2.0*step) - c;
-            const double t = integral + y;
-            c = (t - integral) - y;
-            integral = t;
-
+    for (int i = 1; i < meshsize-1; ++i) {
+        double x = begin + i*step;
+        int weight;
+        switch (i % 4) {
+            case 0: weight = 16; break;
+            case 1: weight = 6;  break;
+            case 2: weight = 16; break;
+            case 3: weight = 7;  break;
         }
+        mid_integral += weight*func(x);
     }
+    integral += 2*mid_integral;
+    integral += func(end);
 
-    return 4.0/3.0*step*integral;
+    return 2.0/45.0*step*integral;
 }
 
 /* Interface with GSL fixed Legendre method. */
