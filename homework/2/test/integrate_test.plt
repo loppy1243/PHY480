@@ -1,7 +1,6 @@
 if (!exists('datafile')) {
     datafile = 'integrate_test.dat'
 }
-!mkdir -p plots
 
 font_str = 'Times'
 small_font_size = 10
