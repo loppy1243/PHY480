@@ -53,7 +53,7 @@ int main (void) {
   gsl_function My_F;		// gsl_function type 
   double abserr;                // absolute error
 
-  ofstream out ("derivative_test.dat");	// open the output file 
+  ofstream out("derivative_test.dat");	// open the output file 
 
   params_ptr = &alpha;		// double to pass to function 
 
@@ -69,6 +69,16 @@ int main (void) {
   cout << " actual relative error: " << setprecision (8)
     << fabs((diff_gsl_cd - answer) / answer) << endl;
 
+  const int prec = 8; const int width = prec+7;
+  const char *const pad = "   ";
+  out << left << "# log10(rel. errs.)\n"
+      << setw(width) << "h"            << pad
+      << setw(width) << "forward_diff" << pad
+      << setw(width) << "central_diff" << pad
+      << setw(width) << "extrap_diff"  << pad
+      << setw(width) << "extrap_diff2\n"
+      << right << scientific << setprecision(prec);
+
   double h = double(1 << 5);		// initialize mesh spacing 
   while (h >= hmin) {
       diff_fd = forward_diff(x, h, &funct, params_ptr);
@@ -77,12 +87,11 @@ int main (void) {
       diff_extrap2 = extrap_diff2(x, h, &funct, params_ptr);
 
       // print relative errors to output file 
-      out << scientific << setprecision (8)
-	      << log10(h) << "   "
-	      << log10(fabs((diff_fd - answer) / answer)) << "   "
-	      << log10(fabs((diff_cd - answer) / answer)) << "   "
-	      << log10(fabs((diff_extrap - answer) / answer)) << "   "
-          << log10(fabs((diff_extrap2 - answer) / answer)) << endl;
+      out << setw(width) << log10(h) << pad
+	      << setw(width) << log10(fabs((diff_fd - answer) / answer)) << pad
+	      << setw(width) << log10(fabs((diff_cd - answer) / answer)) << pad
+	      << setw(width) << log10(fabs((diff_extrap - answer) / answer)) << pad
+          << setw(width) << log10(fabs((diff_extrap2 - answer) / answer)) << '\n';
 
       h /= 2.;		// reduce mesh by 2 
   }
