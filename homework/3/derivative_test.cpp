@@ -31,30 +31,24 @@ using namespace std;		// we need this when .h is omitted
 double funct (double x, void *params_ptr);
 double funct_deriv (double x, void *params_ptr);
 
-double forward_diff (double x, double h,
-		     double (*f) (double x, void *params_ptr),
-		     void *params_ptr);
-double central_diff (double x, double h,
-		     double (*f) (double x, void *params_ptr),
-		     void *params_ptr);
-double extrap_diff (double x, double h,
-		    double (*f) (double x, void *params_ptr),
-		    void *params_ptr);
-double extrap_diff2 (double x, double h,
-		    double (*f) (double x, void *params_ptr),
-		    void *params_ptr);
+double forward_diff(double x, double h, double (*f) (double x, void *params_ptr),
+		            void *params_ptr);
+double central_diff(double x, double h, double (*f) (double x, void *params_ptr),
+                    void *params_ptr);
+double extrap_diff(double x, double h, double (*f) (double x, void *params_ptr),
+                   void *params_ptr);
+double extrap_diff2(double x, double h, double (*f)(double x, void *params_ptr),
+                    void *params_ptr);
 
 //************************** main program ***************************
-int
-main (void)
-{
+int main (void) {
   void *params_ptr;		// void pointer passed to functions 
 
   const double hmin = 0.5;	// minimum mesh size 
   double x = 1.;		// find the derivative at x 
   double alpha = 1.;		// a parameter for the function 
   double diff_cd, diff_fd;	// central, forward difference 
-  double diff_extrap;		// extrapolated derivative 
+  double diff_extrap, diff_extrap2;		// extrapolated derivative 
   double diff_gsl_cd;		// gsl adaptive central derivative 
   gsl_function My_F;		// gsl_function type 
   double abserr;                // absolute error
@@ -67,25 +61,27 @@ main (void)
 
   My_F.function = &funct;	// set up the gsl function 
   My_F.params = params_ptr;
-  gsl_diff_central (&My_F, x, &diff_gsl_cd, &abserr);	// gsl calculation
+  gsl_diff_central(&My_F, x, &diff_gsl_cd, &abserr);	// gsl calculation
 
   cout << "gsl_diff_central(" << x << ") = " << scientific
-    << setprecision (16) << diff_gsl_cd << " +/- "
-    << setprecision (6) << abserr << endl;
+    << setprecision(16) << diff_gsl_cd << " +/- "
+    << setprecision(6) << abserr << endl;
   cout << " actual relative error: " << setprecision (8)
-    << fabs ((diff_gsl_cd - answer) / answer) << endl;
+    << fabs((diff_gsl_cd - answer) / answer) << endl;
 
-  double h = 0.1;		// initialize mesh spacing 
+  double h = double(1 << 5);		// initialize mesh spacing 
   while (h >= hmin) {
       diff_fd = forward_diff(x, h, &funct, params_ptr);
       diff_cd = central_diff(x, h, &funct, params_ptr);
       diff_extrap = extrap_diff(x, h, &funct, params_ptr);
+      diff_extrap2 = extrap_diff2(x, h, &funct, params_ptr);
 
       // print relative errors to output file 
       out << scientific << setprecision (8)
 	      << log10(h) << "   "
 	      << log10(fabs((diff_fd - answer) / answer)) << "   "
 	      << log10(fabs((diff_cd - answer) / answer)) << "   "
+	      << log10(fabs((diff_extrap - answer) / answer)) << "   "
           << log10(fabs((diff_extrap2 - answer) / answer)) << endl;
 
       h /= 2.;		// reduce mesh by 2 
@@ -137,4 +133,10 @@ extrap_diff (double x, double h,
 {
   return ( 4.*central_diff (x, h/2., f, params_ptr) -
               central_diff (x, h, f, params_ptr) ) / 3.;	     
+}
+
+double extrap_diff2(double x, double h, double (*f)(double x, void *params_ptr),
+                    void *params_ptr)
+{
+    return (16.0*extrap_diff(x, h/2.0, f, params_ptr) - extrap_diff(x, h, f, params_ptr))/15.0;
 }
