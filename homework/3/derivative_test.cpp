@@ -44,7 +44,7 @@ double extrap_diff2(double x, double h, double (*f)(double x, void *params_ptr),
 int main (void) {
   void *params_ptr;		// void pointer passed to functions 
 
-  const double hmin = 0.5;	// minimum mesh size 
+  const double hmin = 1.0/double(1 << 7);	// minimum mesh size 
   double x = 1.;		// find the derivative at x 
   double alpha = 1.;		// a parameter for the function 
   double diff_cd, diff_fd;	// central, forward difference 
@@ -71,15 +71,15 @@ int main (void) {
 
   const int prec = 8; const int width = prec+7;
   const char *const pad = "   ";
-  out << left << "# log10(rel. errs.)\n"
+  out << left << "# log10(h) vs. log10(rel errs)\n"
       << setw(width) << "h"            << pad
       << setw(width) << "forward_diff" << pad
       << setw(width) << "central_diff" << pad
       << setw(width) << "extrap_diff"  << pad
-      << setw(width) << "extrap_diff2\n"
+      << setw(width) << "extrap_diff2" << '\n'
       << right << scientific << setprecision(prec);
 
-  double h = double(1 << 5);		// initialize mesh spacing 
+  double h = double(1 << 7);		// initialize mesh spacing 
   while (h >= hmin) {
       diff_fd = forward_diff(x, h, &funct, params_ptr);
       diff_cd = central_diff(x, h, &funct, params_ptr);
