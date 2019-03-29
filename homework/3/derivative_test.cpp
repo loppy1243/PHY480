@@ -2,11 +2,13 @@
 // 
 //  Program to study the error in differentiation rules
 //
-//  Programmer:  Dick Furnstahl  furnstahl.1@osu.edu
+//  Programmer:  Dick Furnstahl    furnstahl.1@osu.edu
+//               Nicholas Todoroff todorof3@msu.edu    (from 03/28/19)
 //
 //  Revision history:
 //      01/14/04  original version, translated from derivative_test.c
 //      01/20/05  modified extrap_diff to use central_diff
+//      03/28/19  Add extrap_diff2 based off extrap_diff
 //
 //  Notes:
 //   * Based on the discussion of differentiation in Chap. 8
