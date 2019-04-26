@@ -1,0 +1,15 @@
+
+# Grading Scale: check(+) --> excellent codes and analysis
+                 check    --> satisfactory (missing small gaps in analysis or codes)
+                 check(-) --> unsatisfactory (significant problems with codes/analysis or incomplete)  
+
+Your codes are very sophisticated, but something looks wrong with the Milne results. (Recall from the notes,
+the error should be N^-4 for Simpsons and N^-6 for Milne).  
+
+Did you forget to commit/push your analysis for parts b, c, and the bonus e that you started? 
+
+Grade: check(-)
+
+
+
+
