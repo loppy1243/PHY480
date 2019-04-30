@@ -1,0 +1,9 @@
+Grades:  check(-) :  some major problems with the codes and/or analysis
+         check    :  good (with some minor gaps in your results/analysis) 
+         check(+) :  excellent 
+         check(++) : excellent with one of the BONUS problems completed
+
+Hi, just checking if you forgot to commit/push your HW3. If not, just a reminder to 
+please have it before 4pm Friday.
+
+
