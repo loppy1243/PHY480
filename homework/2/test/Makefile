@@ -1,6 +1,7 @@
 .SUFFIXES:
 ROOT := ../
 
+# Inlcude common variables
 ifeq ($(MAKELEVEL), 0)
 include $(ROOT)/config.mk
 endif
@@ -22,6 +23,7 @@ $(EXE_PREFIX)/integrate_test.x: integrate_test.cpp $(BUILD_PREFIX)/integrate.o
 	@mkdir -p $(EXE_PREFIX)
 	$(CXX) -o $@ $(LIBS:%=-l%) $(CXXFLAGS) $^
 
+# Call back to the toplevel Makefile to build the requisite object files
 $(BUILD_PREFIX)/integrate.o: $(ROOT)/integrate.cpp
 	$(eval LIBS := $(LIBS) $(integrate_LIBS))
 	make -C $(ROOT) build

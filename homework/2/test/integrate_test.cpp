@@ -10,7 +10,7 @@
 #endif
 #include "../integrate.h"
 
-// We using integrate::integrand_fptr_t because integrate::legendre uses gsl.
+// We're using integrate::integrand_fptr_t because integrate::legendre uses gsl.
 using method_t = std::function<double(double, double, int, integrate::integrand_fptr_t)>;
 
 constexpr size_t nmethods = 3;
@@ -21,22 +21,31 @@ const std::array<method_t, nmethods> methods = {
 };
 const std::array<const char *, nmethods> method_names = {"simpson", "milne", "gsl_legendre"};
 
+/* Output to stream the result of integrating test_func(x) between x=begin and x=end on
+ * meshsize=meshmap(n) points for n=1...n_meshsizes.
+ */
 template<class F1, class F2>
 void make_integrate_data(std::ostream &stream, double begin, double end, int n_meshsizes,
                          F1 test_func, F2 meshmap)
 {
     stream << std::left << "meshsize";
-    for (auto &&name: method_names)
-        stream << ' ' << name;
+    for (auto &&name: method_names) stream << ' ' << name;
+    for (auto &&name: method_names) stream << ' ' << name << "_double";
     stream << '\n';
 
-    stream << std::right << std::setprecision(8) << std::scientific;
+    stream << std::right << std::setprecision(16) << std::scientific;
     for (int n = 1; n <= n_meshsizes; ++n) {
         auto meshsize = meshmap(n);
 
         stream << meshsize;
+        // Integrations
         for (size_t i = 0; i < methods.size(); ++i) {
             auto val = methods[i](begin, end, meshsize, test_func);
+            stream << ' ' << val;
+        }
+        // Doubled meshsize
+        for (size_t i = 0; i < methods.size(); ++i) {
+            auto val = methods[i](begin, end, 2*meshsize, test_func);
             stream << ' ' << val;
         }
         stream << '\n';
