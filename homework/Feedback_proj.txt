@@ -1,0 +1,8 @@
+Even though it "didn't work", it's a very interesting/ambitious problem, and you put a solid amount of effort into 
+your codes and analysis. Maybe something to iron out over the summer... 
+
+[Btw, you should participate in Morten et al.'s ML school occurring in 2 weeks if you're around. Once that's over (Morten is 
+swamped preparing for that, and I'm attending a collaboration meeting that week in NM), Morten and I will be free to discuss 
+project ideas. Sorry we didn't do a good job of that during the academic year as we were both overextended.] 
+
+Check(+).
