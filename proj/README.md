@@ -1,3 +1,7 @@
+# Obsolete
+This project has been moved into its own repository
+[here](https://github.com/loppy1243/IsingBoltzmann)
+
 Implementation in Julia of a Restricted Boltzmann Machine (RBM) on top of the Ising model
 sampled with the Metropolis algorithm.
 
